@@ -9,9 +9,11 @@ import {
   Group,
   Line,
 } from 'three'
-import { PlanetAurelia } from './PlanetAurelia'
-import { Moon }          from './Moon'
+import { PlanetAurelia }   from './PlanetAurelia'
+import { Moon }            from './Moon'
+import { SelectionRing }   from './SelectionRing'
 import { computeOrbitPosition, buildOrbitPath, orbitScratch } from '../../systems/orbits'
+import { selectionActions, useSelectionStore, moonWorldPos } from '../../store/selectionStore'
 import type { MoonConfig } from '../../types/celestial'
 
 // ---------------------------------------------------------------------------
@@ -52,14 +54,17 @@ type OrbitingMoonProps = {
 }
 
 function OrbitingMoon({ config, lightDir }: OrbitingMoonProps) {
-  const groupRef = useRef<Group>(null)
+  const groupRef    = useRef<Group>(null)
+  const isSelected  = useSelectionStore((s) => s.selectedId === 'luna-01')
 
   useFrame(({ clock }) => {
     const group = groupRef.current
     if (!group) return
-    // Use elapsed time for deterministic, drift-free positioning
+    // Deterministic elapsed-time position
     computeOrbitPosition(orbitScratch, config.orbit, clock.elapsedTime)
     group.position.copy(orbitScratch)
+    // Publish world position for the exploration camera hook
+    moonWorldPos.copy(orbitScratch)
   })
 
   return (
@@ -68,7 +73,15 @@ function OrbitingMoon({ config, lightDir }: OrbitingMoonProps) {
         radius={config.radius}
         rotationSpeed={config.rotationSpeed}
         lightDir={lightDir}
+        onSelect={() => selectionActions.select('luna-01')}
       />
+      {isSelected && (
+        <SelectionRing
+          innerRadius={config.radius * 1.35}
+          outerRadius={config.radius * 1.55}
+          tiltX={0.25}
+        />
+      )}
     </group>
   )
 }
@@ -98,11 +111,37 @@ export const LUNA_01: MoonConfig = {
   rotationSpeed: 0.012,
   orbit: {
     semiMajorAxis: 5.2,
-    semiMinorAxis: 4.6,       // slight ellipse
-    speed:         0.22,      // ~28s per revolution — clearly visible
-    inclination:   0.22,      // ~12.6° — tilted orbit plane for visual interest
-    phase:         0.4,       // start slightly offset so moon is visible at load
+    semiMinorAxis: 4.6,
+    speed:         0.22,
+    inclination:   0.22,
+    phase:         0.4,
   },
+}
+
+// ---------------------------------------------------------------------------
+// Selectable planet wrapper
+// ---------------------------------------------------------------------------
+
+function SelectablePlanet() {
+  const isSelected = useSelectionStore((s) => s.selectedId === 'aurelia')
+
+  return (
+    <group
+      onClick={(e) => {
+        e.stopPropagation()
+        selectionActions.select('aurelia')
+      }}
+    >
+      <PlanetAurelia />
+      {isSelected && (
+        <SelectionRing
+          innerRadius={2.2 * 1.12}
+          outerRadius={2.2 * 1.20}
+          tiltX={0.2}
+        />
+      )}
+    </group>
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -110,31 +149,20 @@ export const LUNA_01: MoonConfig = {
 // ---------------------------------------------------------------------------
 
 /**
- * OrbitalSystem — composes AURELIA and all orbiting bodies into a single
- * scene group.
+ * OrbitalSystem — composes AURELIA and all orbiting bodies.
  *
- * Architecture:
- *   <group>                     ← scene origin
- *     <PlanetAurelia />         ← primary body at [0,0,0]
- *     {moons.map(m =>
- *       <OrbitPath />           ← the ellipse ring (static geometry)
- *       <OrbitingMoon />        ← moon body at computed orbital position
- *     )}
- *   </group>
- *
- * Adding more moons later: pass additional MoonConfig entries in the `moons`
- * prop.  Orbit calculations live in src/systems/orbits.ts and are
- * independent of this component.
- *
- * Performance notes:
- * - Orbit path is a static LineSegments — built once, never reallocated.
- * - Moon position is computed via elapsed time — deterministic, no drift.
- * - orbitScratch is a module-level Vector3 — zero allocations per frame.
+ * Changes in Task 08:
+ * - SelectablePlanet wraps PlanetAurelia and handles click → select('aurelia')
+ * - OrbitingMoon publishes its world position to moonWorldPos each frame
+ * - Selection rings appear on the selected body
+ * - Clicking empty space via the canvas pointer-missed event deselects
  */
 export function OrbitalSystem({ moons = [LUNA_01] }: OrbitalSystemProps) {
   return (
-    <group>
-      <PlanetAurelia />
+    <group
+      onPointerMissed={() => selectionActions.deselect()}
+    >
+      <SelectablePlanet />
       {moons.map(moon => (
         <group key={moon.id}>
           <OrbitPath config={moon} />

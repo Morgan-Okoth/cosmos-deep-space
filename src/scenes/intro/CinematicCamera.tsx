@@ -1,17 +1,15 @@
-import { useCinematicCamera } from '../../hooks/useCinematicCamera'
+import { useCinematicCamera }     from '../../hooks/useCinematicCamera'
+import { useExplorationCamera }   from '../../hooks/useExplorationCamera'
 
 /**
  * CinematicCamera — a renderless component placed inside <SceneCanvas>.
  *
- * It simply calls the useCinematicCamera hook which imperatively drives the
- * R3F camera through the intro sequence.  Keeping it as a dedicated component
- * (rather than inlining the hook in OrbitalSystem) maintains separation of
- * concerns — the camera controller is independent of scene content.
- *
- * Place this BEFORE scene content children so it registers its useFrame
- * callback early.
+ * Runs both camera hooks in one component so only one useFrame registration
+ * exists per hook.  useCinematicCamera handles the intro sequence;
+ * useExplorationCamera handles focus/overview once the intro is complete.
  */
 export function CinematicCamera() {
   useCinematicCamera()
+  useExplorationCamera()
   return null
 }

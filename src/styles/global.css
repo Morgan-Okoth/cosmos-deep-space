@@ -269,3 +269,286 @@
     transform: translateY(0);
   }
 }
+
+/* ==========================================================================
+   COSMOS Exploration HUD — Task 08
+   All classes namespaced under .hud-* to avoid conflicts.
+   ========================================================================== */
+
+/* ---- HUD root shell ---------------------------------------------------- */
+
+.hud-root {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;   /* pass clicks through to canvas by default */
+}
+
+/* Re-enable pointer events on interactive children */
+.hud-root button,
+.hud-root .hud-panel {
+  pointer-events: auto;
+}
+
+/* ---- Top bar ----------------------------------------------------------- */
+
+.hud-topbar {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(to bottom, rgba(2,3,8,0.75) 0%, transparent 100%);
+}
+
+/* Brand cluster */
+.hud-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.hud-brand-icon {
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.hud-brand-name {
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.4em;
+  color: rgba(255,255,255,0.75);
+}
+
+.hud-selected-name {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--color-accent);
+  padding: 0.15rem 0.5rem;
+  border: 1px solid rgba(95,211,240,0.3);
+  border-radius: 2px;
+  margin-left: 0.4rem;
+}
+
+/* Camera mode badge */
+.hud-mode-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+
+.hud-mode-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(95,211,240,0.55);
+  box-shadow: 0 0 5px rgba(95,211,240,0.4);
+}
+
+/* ---- Camera controls --------------------------------------------------- */
+
+.hud-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hud-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.45);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.hud-btn:hover,
+.hud-btn:focus-visible {
+  border-color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.05);
+  outline: none;
+}
+
+.hud-btn--accent {
+  border-color: rgba(95,211,240,0.35);
+  color: rgba(95,211,240,0.75);
+}
+
+.hud-btn--accent:hover,
+.hud-btn--accent:focus-visible {
+  border-color: rgba(95,211,240,0.75);
+  color: rgba(95,211,240,1.0);
+  background: rgba(95,211,240,0.07);
+}
+
+/* ---- Panel container (right column) ------------------------------------ */
+
+.hud-panel-container {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0 1.25rem;
+  overflow: hidden;
+}
+
+/* ---- Info panel -------------------------------------------------------- */
+
+.hud-panel {
+  width: 240px;
+  background: rgba(4,6,10,0.82);
+  border: 1px solid rgba(95,211,240,0.18);
+  border-radius: 3px;
+  padding: 1.2rem;
+  backdrop-filter: blur(8px);
+  animation: hud-panel-slide-in 0.35s cubic-bezier(0.16,1,0.3,1) both;
+  pointer-events: auto;
+}
+
+@media (min-width: 1024px) {
+  .hud-panel { width: 268px; }
+}
+
+@keyframes hud-panel-slide-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.hud-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.hud-panel-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  color: rgba(95,211,240,0.55);
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+
+.hud-panel-title {
+  margin: 0 0 0.2rem;
+  font-size: 1.15rem;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  color: #ffffff;
+}
+
+.hud-panel-classification {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: rgba(200,220,240,0.5);
+  text-transform: uppercase;
+}
+
+.hud-panel-close {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.4);
+  width: 24px;
+  height: 24px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s, color 0.2s;
+  line-height: 1;
+}
+
+.hud-panel-close:hover,
+.hud-panel-close:focus-visible {
+  border-color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.8);
+  outline: none;
+}
+
+.hud-panel-divider {
+  height: 1px;
+  background: linear-gradient(to right, rgba(95,211,240,0.25), transparent);
+  margin-bottom: 0.9rem;
+}
+
+/* Attribute list */
+.hud-panel-attrs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0 0 0.9rem;
+}
+
+.hud-panel-attr-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.hud-panel-attr-label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.hud-panel-attr-value {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: rgba(200,230,255,0.75);
+  text-align: right;
+  margin: 0;
+}
+
+.hud-panel-note {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.18);
+  text-transform: uppercase;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 0.6rem;
+}
+
+/* ---- Bottom bar -------------------------------------------------------- */
+
+.hud-bottombar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.5rem;
+  background: linear-gradient(to top, rgba(2,3,8,0.6) 0%, transparent 100%);
+}
+
+.hud-coords {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.22);
+  text-transform: uppercase;
+}

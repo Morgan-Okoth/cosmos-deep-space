@@ -22,6 +22,9 @@ type MoonProps = {
 
   /** Shared light direction from the scene (should match the directional light). */
   lightDir: Vector3
+
+  /** Called when the moon mesh is clicked — used for celestial selection. */
+  onSelect?: () => void
 }
 
 // ---------------------------------------------------------------------------
@@ -42,6 +45,7 @@ export function Moon({
   radius        = 0.5,
   rotationSpeed = 0.015,
   lightDir,
+  onSelect,
 }: MoonProps) {
   const meshRef = useRef<Mesh>(null)
 
@@ -54,7 +58,6 @@ export function Moon({
         fragmentShader: MOON_FRAG,
         uniforms: {
           uLightDir:  { value: lightDir },
-          // uCameraPos is updated each frame from the R3F camera
           uCameraPos: { value: new Vector3() },
         },
       }),
@@ -65,14 +68,21 @@ export function Moon({
 
   useFrame(({ camera }, delta) => {
     if (!meshRef.current) return
-    // Axial rotation — tidal-lock would be rotationSpeed ≈ orbit speed;
-    // we keep it configurable for visual interest
     meshRef.current.rotation.y += rotationSpeed * delta
-    // Update camera position uniform for specular-free lighting calc
     ;(meshRef.current.material as ShaderMaterial).uniforms.uCameraPos.value.copy(
       camera.position,
     )
   })
 
-  return <mesh ref={meshRef} geometry={geometry} material={material} />
+  return (
+    <mesh
+      ref={meshRef}
+      geometry={geometry}
+      material={material}
+      onClick={(e) => {
+        e.stopPropagation()
+        onSelect?.()
+      }}
+    />
+  )
 }

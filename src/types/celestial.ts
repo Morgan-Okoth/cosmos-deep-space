@@ -49,3 +49,21 @@ export type MoonConfig = {
   /** Orbital parameters describing the moon's path around its parent. */
   orbit: OrbitalParams
 }
+
+// ---------------------------------------------------------------------------
+// HUD / info panel data
+// ---------------------------------------------------------------------------
+
+/** A single labelled attribute row shown in the info panel. */
+export type CelestialAttribute = {
+  label: string
+  value: string
+}
+
+/** Static descriptive data for a celestial body's information panel. */
+export type CelestialInfo = {
+  id: string
+  name: string
+  classification: string
+  attributes: CelestialAttribute[]
+}
