@@ -1,24 +1,26 @@
 import { Orbit } from 'lucide-react'
 import { EngineTestScene } from '../../scenes/EngineTestScene'
 import { SceneCanvas } from '../../scenes/SceneCanvas'
+import { StarfieldPoints } from '../../scenes/StarfieldPoints'
 import { SceneErrorBoundary } from '../ui/SceneErrorBoundary'
-import { Starfield } from '../ui/Starfield'
 import { StatusBadge } from '../ui/StatusBadge'
 
 /**
  * AppShell — full-screen COSMOS layout.
  *
  * Layering (back → front):
- *   1. CSS starfield      — ambient deep-space backdrop (Task 01)
- *   2. 3D engine canvas    — transparent R3F canvas with the engine test scene
- *   3. UI overlay          — COSMOS branding + system status
+ *   1. R3F canvas  — deep-space background color + 3D starfield + test mesh
+ *   2. UI overlay  — pointer-events-none COSMOS branding + system status
+ *
+ * The CSS `.starfield` layer from Task 01 is superseded by the 3D starfield
+ * added in Task 03; the WebGL renderer now owns the full background.
  */
 export function AppShell() {
   return (
     <div className="relative h-[100svh] w-full overflow-hidden bg-space text-white">
-      <Starfield />
       <SceneErrorBoundary>
         <SceneCanvas>
+          <StarfieldPoints />
           <EngineTestScene />
         </SceneCanvas>
       </SceneErrorBoundary>

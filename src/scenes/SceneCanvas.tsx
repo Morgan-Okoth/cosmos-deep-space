@@ -13,16 +13,17 @@ type SceneCanvasProps = {
  * content is supplied as `children` so the same shell can be reused across
  * later tasks.
  *
- * The canvas clears transparent (`alpha: true`) so the COSMOS CSS starfield
- * shows through behind the 3D content. Pixel ratio is capped at 2 and shadows
- * are left off to keep the scene lightweight.
+ * Uses a solid deep-space clear color (#04060a) so the WebGL renderer owns the
+ * background — the 3D starfield lives inside the scene rather than relying on a
+ * CSS fallback. Far plane is extended to 1000 to accommodate the star sphere
+ * (radius 450).
  */
 export function SceneCanvas({ children }: SceneCanvasProps) {
   return (
     <Canvas
       dpr={[1, 2]}
       gl={{
-        alpha: true,
+        alpha: false,
         antialias: true,
         powerPreference: 'high-performance',
       }}
@@ -30,7 +31,7 @@ export function SceneCanvas({ children }: SceneCanvasProps) {
         position: [0, 0, 6],
         fov: 50,
         near: 0.1,
-        far: 100,
+        far: 1000,
       }}
       style={{
         position: 'absolute',
@@ -39,6 +40,8 @@ export function SceneCanvas({ children }: SceneCanvasProps) {
         height: '100%',
       }}
     >
+      {/* Deep-space background color owned by the renderer */}
+      <color attach="background" args={['#04060a']} />
       <ambientLight intensity={0.4} />
       <directionalLight position={[5, 5, 5]} intensity={1.1} />
       {children}
