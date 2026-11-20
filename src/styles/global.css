@@ -47,3 +47,225 @@
     opacity: 1;
   }
 }
+
+/* ==========================================================================
+   COSMOS Intro Overlay — Task 07
+   All classes are namespaced under .intro-* to avoid conflicts.
+   ========================================================================== */
+
+/* ---- Full-screen overlay shell ----------------------------------------- */
+
+.intro-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* Subtle vignette darkens the outer edges, keeping the title readable     */
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    transparent 30%,
+    rgba(2, 3, 8, 0.55) 100%
+  );
+  transition: opacity 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+}
+
+.intro-overlay[data-exiting='true'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---- Skip button -------------------------------------------------------- */
+
+.intro-skip {
+  position: absolute;
+  top: 1.75rem;
+  right: 2rem;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+  animation: intro-fade-in 0.6s ease-out 3.8s both;
+}
+
+.intro-skip:hover,
+.intro-skip:focus-visible {
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.05);
+  outline: none;
+}
+
+/* ---- Centre block ------------------------------------------------------ */
+
+.intro-centre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  text-align: center;
+}
+
+/* Eyebrow — tiny label above the title */
+.intro-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.5em;
+  color: rgba(95, 211, 240, 0.65);
+  text-transform: uppercase;
+  margin-bottom: 1.4rem;
+  animation: intro-fade-in 0.8s ease-out 1.2s both;
+}
+
+/* Main title — large, spaced, premium */
+.intro-title {
+  margin: 0 0 1.1rem;
+  font-weight: 200;
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  letter-spacing: 0.5em;
+  color: #ffffff;
+  line-height: 1;
+  /* Individual chars are animated via inline delay */
+}
+
+.intro-title-char {
+  display: inline-block;
+  /* Base: invisible */
+  opacity: 0;
+  transform: translateY(12px);
+  animation: intro-char-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* text-shadow produces a restrained glow without neon excess */
+  text-shadow:
+    0 0 40px rgba(95, 211, 240, 0.25),
+    0 0 80px rgba(95, 211, 240, 0.08);
+}
+
+/* Subtitle */
+.intro-subtitle {
+  margin: 0 0 2.4rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 1.5vw, 0.75rem);
+  letter-spacing: 0.45em;
+  color: rgba(200, 220, 240, 0.55);
+  text-transform: uppercase;
+  animation: intro-fade-in 1s ease-out 2.6s both;
+}
+
+/* Thin horizontal divider */
+.intro-divider {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(95, 211, 240, 0.4),
+    transparent
+  );
+  margin: 0 auto 2.4rem;
+  animation: intro-fade-in 0.8s ease-out 3.2s both;
+}
+
+/* ---- Action buttons ---------------------------------------------------- */
+
+.intro-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  animation: intro-fade-in 0.8s ease-out 3.5s both;
+}
+
+/* Primary CTA */
+.intro-enter-btn {
+  background: transparent;
+  border: 1px solid rgba(95, 211, 240, 0.4);
+  color: rgba(95, 211, 240, 0.9);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  padding: 0.9rem 2.6rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.25s, border-color 0.25s, color 0.25s,
+    box-shadow 0.25s;
+  /* Subtle ambient glow matching the accent color */
+  box-shadow: 0 0 24px rgba(95, 211, 240, 0.0);
+}
+
+.intro-enter-btn:hover,
+.intro-enter-btn:focus-visible {
+  background: rgba(95, 211, 240, 0.08);
+  border-color: rgba(95, 211, 240, 0.75);
+  color: #ffffff;
+  box-shadow: 0 0 24px rgba(95, 211, 240, 0.18),
+    inset 0 0 12px rgba(95, 211, 240, 0.04);
+  outline: none;
+}
+
+.intro-enter-btn:active {
+  background: rgba(95, 211, 240, 0.14);
+}
+
+/* ---- Footer ------------------------------------------------------------ */
+
+.intro-footer {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  animation: intro-fade-in 0.8s ease-out 4.2s both;
+}
+
+.intro-footer-text {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+}
+
+.intro-footer-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(95, 211, 240, 0.6);
+  box-shadow: 0 0 6px rgba(95, 211, 240, 0.4);
+  animation: cosmos-pulse 2.4s ease-in-out infinite;
+}
+
+/* ---- Keyframes --------------------------------------------------------- */
+
+@keyframes intro-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes intro-char-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
