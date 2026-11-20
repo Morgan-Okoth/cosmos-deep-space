@@ -552,3 +552,211 @@
   color: rgba(255,255,255,0.22);
   text-transform: uppercase;
 }
+
+/* ==========================================================================
+   COSMOS Scanner — Task 09
+   ========================================================================== */
+
+/* ---- Wide button variant ----------------------------------------------- */
+
+.hud-btn--wide {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+}
+
+/* ---- Scan initiation button in info panel ------------------------------ */
+
+.hud-panel-scan-action {
+  margin-bottom: 0.6rem;
+}
+
+/* ---- Scan panel -------------------------------------------------------- */
+
+.scan-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.scan-panel-header {
+  margin-bottom: 0.8rem;
+}
+
+.scan-panel-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  color: rgba(95,211,240,0.55);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.scan-panel-title {
+  margin: 0 0 0.2rem;
+  font-size: 1.05rem;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  color: #ffffff;
+}
+
+.scan-panel-status {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.scan-panel-status--scanning {
+  color: rgba(95,211,240,0.9);
+  animation: scan-blink 1.4s ease-in-out infinite;
+}
+
+.scan-panel-status--complete {
+  color: rgba(120,255,180,0.85);
+}
+
+@keyframes scan-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+.scan-panel-divider {
+  height: 1px;
+  background: linear-gradient(to right, rgba(95,211,240,0.25), transparent);
+  margin-bottom: 0.8rem;
+}
+
+/* ---- Progress bar ------------------------------------------------------ */
+
+.scan-panel-progress-wrap {
+  margin-bottom: 0.9rem;
+}
+
+.scan-progress-track {
+  position: relative;
+  height: 3px;
+  background: rgba(95,211,240,0.12);
+  border-radius: 2px;
+  overflow: visible;
+  margin-bottom: 0.4rem;
+}
+
+.scan-progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, rgba(95,211,240,0.6), rgba(95,211,240,1.0));
+  border-radius: 2px;
+  transition: width 0.15s linear;
+  box-shadow: 0 0 6px rgba(95,211,240,0.5);
+}
+
+.scan-progress-label {
+  position: absolute;
+  right: 0;
+  top: -1.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: rgba(95,211,240,0.75);
+}
+
+.scan-panel-milestone {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.57rem;
+  letter-spacing: 0.12em;
+  color: rgba(200,230,255,0.55);
+  text-transform: uppercase;
+  animation: scan-reveal 0.4s ease-out both;
+}
+
+/* ---- Categories -------------------------------------------------------- */
+
+.scan-panel-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.8rem;
+  /* Allow scrolling if many results */
+  max-height: 260px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(95,211,240,0.2) transparent;
+}
+
+.scan-category {
+  animation: scan-reveal 0.5s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+@keyframes scan-reveal {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.scan-category-title {
+  font-family: var(--font-mono);
+  font-size: 0.57rem;
+  letter-spacing: 0.22em;
+  color: rgba(95,211,240,0.65);
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(95,211,240,0.12);
+}
+
+.scan-category-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0;
+}
+
+.scan-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.scan-row-label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.scan-row-value {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  color: rgba(200,230,255,0.75);
+  text-align: right;
+  margin: 0;
+}
+
+/* ---- Scan panel footer ------------------------------------------------- */
+
+.scan-panel-footer {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 0.6rem;
+}
+
+.scan-panel-note {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.18);
+  text-transform: uppercase;
+}
+
+.scan-panel-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}

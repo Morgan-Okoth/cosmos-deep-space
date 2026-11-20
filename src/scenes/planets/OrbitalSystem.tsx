@@ -12,8 +12,10 @@ import {
 import { PlanetAurelia }   from './PlanetAurelia'
 import { Moon }            from './Moon'
 import { SelectionRing }   from './SelectionRing'
+import { ScanOverlay }     from './ScanOverlay'
 import { computeOrbitPosition, buildOrbitPath, orbitScratch } from '../../systems/orbits'
 import { selectionActions, useSelectionStore, moonWorldPos } from '../../store/selectionStore'
+import { useScanStore } from '../../store/scanStore'
 import type { MoonConfig } from '../../types/celestial'
 
 // ---------------------------------------------------------------------------
@@ -56,14 +58,15 @@ type OrbitingMoonProps = {
 function OrbitingMoon({ config, lightDir }: OrbitingMoonProps) {
   const groupRef    = useRef<Group>(null)
   const isSelected  = useSelectionStore((s) => s.selectedId === 'luna-01')
+  const isScanning  = useScanStore((s) =>
+    s.targetId === 'luna-01' && (s.phase === 'scanning' || s.phase === 'complete'),
+  )
 
   useFrame(({ clock }) => {
     const group = groupRef.current
     if (!group) return
-    // Deterministic elapsed-time position
     computeOrbitPosition(orbitScratch, config.orbit, clock.elapsedTime)
     group.position.copy(orbitScratch)
-    // Publish world position for the exploration camera hook
     moonWorldPos.copy(orbitScratch)
   })
 
@@ -82,6 +85,7 @@ function OrbitingMoon({ config, lightDir }: OrbitingMoonProps) {
           tiltX={0.25}
         />
       )}
+      {isScanning && <ScanOverlay radius={config.radius} />}
     </group>
   )
 }
@@ -123,7 +127,10 @@ export const LUNA_01: MoonConfig = {
 // ---------------------------------------------------------------------------
 
 function SelectablePlanet() {
-  const isSelected = useSelectionStore((s) => s.selectedId === 'aurelia')
+  const isSelected  = useSelectionStore((s) => s.selectedId === 'aurelia')
+  const isScanning  = useScanStore((s) =>
+    s.targetId === 'aurelia' && (s.phase === 'scanning' || s.phase === 'complete'),
+  )
 
   return (
     <group
@@ -140,6 +147,7 @@ function SelectablePlanet() {
           tiltX={0.2}
         />
       )}
+      {isScanning && <ScanOverlay radius={2.2} />}
     </group>
   )
 }
