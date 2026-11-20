@@ -1,10 +1,10 @@
 import { Orbit } from 'lucide-react'
-import { EngineTestScene } from '../../scenes/EngineTestScene'
-import { NebulaEnvironment } from '../../scenes/NebulaEnvironment'
-import { SceneCanvas } from '../../scenes/SceneCanvas'
-import { StarfieldPoints } from '../../scenes/StarfieldPoints'
-import { SceneErrorBoundary } from '../ui/SceneErrorBoundary'
-import { StatusBadge } from '../ui/StatusBadge'
+import { NebulaEnvironment }         from '../../scenes/NebulaEnvironment'
+import { PlanetAurelia }             from '../../scenes/planets/PlanetAurelia'
+import { SceneCanvas }               from '../../scenes/SceneCanvas'
+import { StarfieldPoints }           from '../../scenes/StarfieldPoints'
+import { SceneErrorBoundary }        from '../ui/SceneErrorBoundary'
+import { StatusBadge }               from '../ui/StatusBadge'
 
 /**
  * AppShell — full-screen COSMOS layout.
@@ -13,17 +13,19 @@ import { StatusBadge } from '../ui/StatusBadge'
  *   1. R3F canvas
  *      a. NebulaEnvironment  — deepest layer, large FBM cloud quads
  *      b. StarfieldPoints    — 3D point-sprite starfield on top of nebula
- *      c. EngineTestScene    — foreground rotating test mesh
+ *      c. PlanetAurelia      — procedural ocean planet (surface + clouds + atmo)
  *   2. UI overlay            — pointer-events-none COSMOS branding + status
+ *
+ * Camera is pulled back to [0, 0.3, 7.5] to frame the full planet disc.
  */
 export function AppShell() {
   return (
     <div className="relative h-[100svh] w-full overflow-hidden bg-space text-white">
       <SceneErrorBoundary>
-        <SceneCanvas>
+        <SceneCanvas cameraPosition={[0, 0.3, 7.5]}>
           <NebulaEnvironment />
           <StarfieldPoints />
-          <EngineTestScene />
+          <PlanetAurelia />
         </SceneCanvas>
       </SceneErrorBoundary>
       <div className="pointer-events-none relative z-10 flex h-full flex-col items-center justify-between px-6 py-10 text-center">

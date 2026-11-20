@@ -3,6 +3,8 @@ import type { ReactNode } from 'react'
 
 type SceneCanvasProps = {
   children?: ReactNode
+  /** Camera world-space position. Default [0, 0, 6]. */
+  cameraPosition?: [number, number, number]
 }
 
 /**
@@ -18,7 +20,10 @@ type SceneCanvasProps = {
  * CSS fallback. Far plane is extended to 1000 to accommodate the star sphere
  * (radius 450).
  */
-export function SceneCanvas({ children }: SceneCanvasProps) {
+export function SceneCanvas({
+  children,
+  cameraPosition = [0, 0, 6],
+}: SceneCanvasProps) {
   return (
     <Canvas
       dpr={[1, 2]}
@@ -28,7 +33,7 @@ export function SceneCanvas({ children }: SceneCanvasProps) {
         powerPreference: 'high-performance',
       }}
       camera={{
-        position: [0, 0, 6],
+        position: cameraPosition,
         fov: 50,
         near: 0.1,
         far: 1000,
